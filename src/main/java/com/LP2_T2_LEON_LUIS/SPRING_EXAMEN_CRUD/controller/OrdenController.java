@@ -66,5 +66,21 @@ public class OrdenController {
 		return "orden/edicion";
 	}
 	
+	@PostMapping("guardar")
+	public String guardar(@ModelAttribute OrdenCompra ordencompra, Model model, RedirectAttributes flash) {
+		
+		var response = ordenCompraService.update(ordencompra);
+		
+		if (!response.success) {
+			model.addAttribute("alert", Alert.sweetAlertError(response.mensaje));
+			model.addAttribute("lstProveedor", proveedorService.getAll());
+			model.addAttribute("lstRubro", rubroService.getAll());
+			return "orden/nuevo";
+		}
+	
+		flash.addFlashAttribute("toast", Alert.sweetToast(response.mensaje, "success", 5000));
+		return "redirect:/orden/listado";
+	}
+	
 	
 }
